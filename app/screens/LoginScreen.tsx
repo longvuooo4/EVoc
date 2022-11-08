@@ -33,7 +33,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
         .then((userCredentials) => {
           console.log(googleCredential)
 
-          // navigation.navigate("Home")
+          navigation.navigate("Home")
           // navigation.reset({
           //   index: 0,
           //   // routes: [{ name: "user" }],
@@ -63,7 +63,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          Alert.alert("Đăng nhập thành công", `Chào mừng bạn ${email}`)
+          Alert.alert("Đăng nhập thành công", `Chào mừng bạn ${auth().currentUser.displayName}`)
         })
         .catch((error) => {
           // console.log(error.code)
@@ -90,7 +90,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
     }
   }
   const onSignupPress = () => {
-    // navigation.navigate("Signup")
+    navigation.navigate("Signup")
   }
   return (
     <Screen

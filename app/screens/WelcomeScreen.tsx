@@ -14,6 +14,7 @@ import { isRTL } from "../i18n"
 import { useStores } from "../models" // @demo remove-current-line
 import { AppStackScreenProps } from "../navigators" // @demo remove-current-line
 import { colors, spacing } from "../theme"
+import auth from "@react-native-firebase/auth"
 
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
@@ -28,15 +29,20 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   const {
     authenticationStore: { logout },
   } = useStores()
-
+  function onLogoutPress() {
+    auth()
+      .signOut()
+      .then(() => console.log("User signed out!"))
+  }
   function goNext() {
-    navigation.navigate("Demo", { screen: "DemoShowroom" })
+    navigation.navigate("Home")
+    // navigation.navigate("Demo", { screen: "DemoShowroom" })
   }
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      header: () => <Header rightTx="common.logOut" onRightPress={logout} />,
+      header: () => <Header rightTx="common.logOut" onRightPress={onLogoutPress} />,
     })
   }, [])
   // @demo remove-block-end

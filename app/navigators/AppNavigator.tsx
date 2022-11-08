@@ -4,7 +4,7 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import {
+ import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
@@ -13,16 +13,20 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useColorScheme } from "react-native"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
-  LoginScreen, // @demo remove-current-line
+  DetailFolderScreen,
+  HomeScreen,
+  LoginScreen,
+  SignupScreen, // @demo remove-current-line
   WelcomeScreen,
 } from "../screens"
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
+import auth from "@react-native-firebase/auth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -40,8 +44,13 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 export type AppStackParamList = {
   Welcome: undefined
   Login: undefined // @demo remove-current-line
+  Signup: undefined
+  Home: undefined
+  Folder:{
+    folder: FolderE
+  } 
   Demo: NavigatorScreenParams<DemoTabParamList> // @demo remove-current-line
-  // 🔥 Your screens go here
+  DetailFolder: undefined
 }
 
 /**
@@ -60,27 +69,39 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   // @demo remove-block-start
-  const {
-    authenticationStore: { isAuthenticated },
-  } = useStores()
+  // const {
+  //   authenticationStore: { isAuthenticated },
+  // } = useStores()
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState()
+  function onAuthStateChanged(user) {
+    setUser(user)
+    if (initializing) setInitializing(false)
+  }
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
+    return subscriber // unsubscribe on unmount
+  }, [])
 
+  if (initializing) return null
   // @demo remove-block-end
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
+      initialRouteName={user ? "Welcome" : "Login"} // @demo remove-current-line
     >
       {/* @demo remove-block-start */}
-      {isAuthenticated ? (
+      {user ? (
         <>
-          {/* @demo remove-block-end */}
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          {/* @demo remove-block-start */}
-          <Stack.Screen name="Demo" component={DemoNavigator} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="DetailFolder" component={DetailFolderScreen} />
+
         </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
         </>
       )}
       {/* @demo remove-block-end */}
