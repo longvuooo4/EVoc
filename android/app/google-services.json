@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "442457688299",
+    "project_id": "evoc-6c35f",
+    "storage_bucket": "evoc-6c35f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442457688299:android:72fbcb6a9e56b6cb4f16ae",
+        "android_client_info": {
+          "package_name": "com.evoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442457688299-vnusi5o6j5m7a6ouoh8u62gsqem71m91.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evoc",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "442457688299-ejuki2n2rvcbelepqkjlak1719m0q4f1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_xagtHNBKVst3xZlOKA1Iwl_LemMMrOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442457688299-ejuki2n2rvcbelepqkjlak1719m0q4f1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

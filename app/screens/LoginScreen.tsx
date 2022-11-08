@@ -1,89 +1,110 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
+import { Alert, TextInput, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native"
+import {
+  Button,
+  ButtonSocial,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  TextFieldAccessoryProps,
+} from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-
+import auth from "@react-native-firebase/auth"
+import { useNavigation } from "@react-navigation/native"
+import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin"
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
-export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const authPasswordInput = useRef<TextInput>()
-  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
-  const {
-    authenticationStore: {
-      authEmail,
-      authPassword,
-      setAuthEmail,
-      setAuthPassword,
-      setAuthToken,
-      validationErrors,
-    },
-  } = useStores()
+export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({ navigation }) {
+  async function googleSignin() {
+    try {
+      await GoogleSignin.configure({
+        webClientId: "442457688299-ejuki2n2rvcbelepqkjlak1719m0q4f1.apps.googleusercontent.com",
+      })
+      const { idToken } = await GoogleSignin.signIn()
+      // console.log(GoogleSignin.signIn())
 
-  useEffect(() => {
-    // Here is where you could fetch credientials from keychain or storage
-    // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
-  }, [])
+      const googleCredential = await auth.GoogleAuthProvider.credential(idToken)
+      return auth()
+        .signInWithCredential(googleCredential)
+        .then((userCredentials) => {
+          console.log(googleCredential)
 
-  const errors: typeof validationErrors = isSubmitted ? validationErrors : ({} as any)
-
-  function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
-
-    if (Object.values(validationErrors).some((v) => !!v)) return
-
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
-  }
-
-  const PasswordRightAccessory = useMemo(
-    () =>
-      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-        return (
-          <Icon
-            icon={isAuthPasswordHidden ? "view" : "hidden"}
-            color={colors.palette.neutral800}
-            containerStyle={props.style}
-            onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
-          />
-        )
-      },
-    [isAuthPasswordHidden],
-  )
-
-  useEffect(() => {
-    return () => {
-      setAuthPassword("")
-      setAuthEmail("")
+          // navigation.navigate("Home")
+          // navigation.reset({
+          //   index: 0,
+          //   // routes: [{ name: "user" }],
+          // })
+        })
+        .catch((err) => {
+          console.log("Login Fail !!\n" + err)
+        })
+    } catch (e) {
+      console.error(e)
     }
-  }, [])
+  }
+  const authPasswordInput = useRef<TextInput>()
+  // const navigation = useNavigation()
+  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
+  // const [isSubmitted, setIsSubmitted] = useState(false)
+  // const [attemptsCount, setAttemptsCount] = useState(0)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const {
+    authenticationStore: { setAuthToken },
+  } = useStores()
+  const onLoginPress = () => {
+    if (email == "" || password == "") {
+      Alert.alert("Login failed", "Please enter email and password")
+    } else {
+      auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          Alert.alert("Đăng nhập thành công", `Chào mừng bạn ${email}`)
+        })
+        .catch((error) => {
+          // console.log(error.code)
 
+          if (error.code === "auth/invalid-email") {
+            Alert.alert("Lỗi đăng nhập", "Email không đúng cú pháp")
+          }
+          if (error.code === "auth/user-not-found") {
+            Alert.alert("Lỗi đăng nhập", "Email không tồn tại")
+          }
+
+          if (error.code === "auth/wrong-password") {
+            Alert.alert("Lỗi đăng nhập", "Mật khẩu không đúng")
+          }
+          if (error.code === "auth/too-many-requests") {
+            Alert.alert(
+              "Lỗi đăng nhập",
+              "Bạn đã đăng nhập sai quá nhiều lần, tài khoản tạm thời bị khoá",
+            )
+          }
+
+          console.error(error)
+        })
+    }
+  }
+  const onSignupPress = () => {
+    // navigation.navigate("Signup")
+  }
   return (
     <Screen
       preset="auto"
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
+      <Text testID="login-heading" text="Sign In" preset="heading" style={$signIn} />
+      {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
+      {/* {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={email}
+        onChangeText={setEmail}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
@@ -91,15 +112,13 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         keyboardType="email-address"
         labelTx="loginScreen.emailFieldLabel"
         placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={errors?.authEmail}
-        status={errors?.authEmail ? "error" : undefined}
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
 
       <TextField
         ref={authPasswordInput}
-        value={authPassword}
-        onChangeText={setAuthPassword}
+        value={password}
+        onChangeText={setPassword}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="password"
@@ -107,10 +126,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         secureTextEntry={isAuthPasswordHidden}
         labelTx="loginScreen.passwordFieldLabel"
         placeholderTx="loginScreen.passwordFieldPlaceholder"
-        helper={errors?.authPassword}
-        status={errors?.authPassword ? "error" : undefined}
-        onSubmitEditing={login}
-        RightAccessory={PasswordRightAccessory}
+        // helper={errors?.authPassword}
+        // status={errors?.authPassword ? "error" : undefined}
+        onSubmitEditing={onLoginPress}
+        // RightAccessory={PasswordRightAccessory}
       />
 
       <Button
@@ -118,8 +137,19 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         tx="loginScreen.tapToSignIn"
         style={$tapButton}
         preset="reversed"
-        onPress={login}
+        onPress={onLoginPress}
       />
+      <Text style={{ textAlign: "center", marginTop: 15 }}>or connect with</Text>
+      <View style={{ alignItems: "center" }}>
+        <ButtonSocial text="Facebook" nameIcon="social-facebook" />
+        <ButtonSocial text="Google" nameIcon="social-google" onPress={googleSignin} />
+      </View>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ textAlign: "center", marginTop: 15 }}>Don't have an account? </Text>
+        <TouchableOpacity style={{ alignSelf: "center", marginTop: 15 }} onPress={onSignupPress}>
+          <Text style={{ color: "#FFA717", textDecorationLine: "underline" }}>Create one</Text>
+        </TouchableOpacity>
+      </View>
     </Screen>
   )
 })
@@ -130,6 +160,8 @@ const $screenContentContainer: ViewStyle = {
 }
 
 const $signIn: TextStyle = {
+  justifyContent: "center",
+  textAlign: "center",
   marginBottom: spacing.small,
 }
 
