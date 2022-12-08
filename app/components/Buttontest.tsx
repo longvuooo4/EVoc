@@ -13,17 +13,18 @@ export interface ButtontestProps {
    */
   style?: StyleProp<ViewStyle>
   text: string
+  onPress?
 }
 
 /**
  * Describe your component here
  */
 export const Buttontest = observer(function Buttontest(props: ButtontestProps) {
-  const { style, text } = props
+  const { style, text, onPress } = props
   const $styles = [$container, style]
 
   return (
-    <TouchableOpacity style={$styles}>
+    <TouchableOpacity style={$styles} onPress={() => onPress()}>
       <Text style={$text}>{text}</Text>
     </TouchableOpacity>
   )

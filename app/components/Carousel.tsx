@@ -16,6 +16,7 @@ import { Text } from "./Text"
 import { memo, useRef, useState } from "react"
 import Octicons from "react-native-vector-icons/Octicons"
 import FlipCard from "react-native-flip-card"
+import Tts from 'react-native-tts';
 
 export interface CarouselProps {
   /**
@@ -44,9 +45,9 @@ export const Carousel = memo(
       const changeHeart = () => {
         setIsHeart(!isHeart)
       }
-
+      Tts.setDefaultLanguage('en-US')
       return (
-        <FlipCard 
+        <FlipCard
           style={styles.tag}
           friction={6}
           perspective={1000}
@@ -54,28 +55,21 @@ export const Carousel = memo(
           flipVertical={true}
           flip={false}
           clickable={true}
-          // onFlipEnd={(isFlipEnd) => {
-          //   console.log("isFlipEnd", isFlipEnd)
-          // }}
         >
           <View style={styles.card}>
-            <TouchableOpacity onPress={changeHeart}>
-              <Octicons
-                style={[styles.heartIcon, isHeart ? styles.redHeart : styles.heartIcon]}
-                name="heart-fill"
-              />
-            </TouchableOpacity>
+            <View style={{flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10}}>
+            <TouchableOpacity onPress={()=>{Tts.speak(item.en)}}>
+                <Octicons
+                  style={[styles.speaker]}
+                  name="unmute"
+                />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.voc}>{item.en}</Text>
           </View>
 
           <View style={styles.card}>
-            <TouchableOpacity onPress={changeHeart}>
-              <Octicons
-                style={[styles.heartIcon, isHeart ? styles.redHeart : styles.heartIcon]}
-                name="heart-fill"
-              />
-            </TouchableOpacity>
-            <Text style={styles.voc}>{item.vn}</Text>
+            <Text style={[styles.voc,  {marginTop: 60}]}>{item.vn}</Text>
           </View>
         </FlipCard>
       )
@@ -123,7 +117,6 @@ export const Carousel = memo(
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             bounces={false}
-            // keyExtractor={(item) => item.}
             onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
               useNativeDriver: false,
             })}
@@ -169,6 +162,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
   },
   heartIcon: {
+    fontSize: 42,
+    alignSelf: "flex-end",
+    margin: 8,
+    color: "#ffff",
+  },
+  speaker:{
     fontSize: 42,
     alignSelf: "flex-end",
     margin: 8,

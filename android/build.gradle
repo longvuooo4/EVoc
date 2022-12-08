@@ -47,8 +47,18 @@ allprojects {
             // We don't want to fetch react-native from Maven Central as there are
             // older versions over there.
             content {
-                excludeGroup "com.facebook.react"
+                excludeGroup("com.facebook.react")
             }
+        }
+        exclusiveContent {
+           filter {
+               includeGroup "com.facebook.react"
+           }
+           forRepository {
+               maven {
+                   url "$rootDir/../node_modules/react-native/android"
+               }
+           }
         }
         google()
         maven { url 'https://www.jitpack.io' }

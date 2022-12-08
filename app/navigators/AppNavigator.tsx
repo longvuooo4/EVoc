@@ -19,14 +19,16 @@ import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import {
   DetailFolderScreen,
+  DetailUserScreen,
   HomeScreen,
   LoginScreen,
-  SignupScreen, // @demo remove-current-line
+  SignupScreen, TestScreen, UserUpdateProfileScreen, // @demo remove-current-line
   WelcomeScreen,
 } from "../screens"
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import auth from "@react-native-firebase/auth"
+import { AddFolderScreen } from "../screens/AddFolderScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -51,6 +53,14 @@ export type AppStackParamList = {
   } 
   Demo: NavigatorScreenParams<DemoTabParamList> // @demo remove-current-line
   DetailFolder: undefined
+  DetailUser: undefined
+  UserUpdateProfile: {
+    detailsUser: InfoUser
+  }
+  AddFolder:{
+    folder: FolderE
+  } 
+  Test: undefined
 }
 
 /**
@@ -96,7 +106,12 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="DetailFolder" component={DetailFolderScreen} />
+          <Stack.Screen name="DetailUser" component={DetailUserScreen} />
+          <Stack.Screen name="UserUpdateProfile" component={UserUpdateProfileScreen} />
+          <Stack.Screen name="AddFolder" component={AddFolderScreen} />
+          <Stack.Screen name="Test" component={TestScreen} />
 
+          
         </>
       ) : (
         <>

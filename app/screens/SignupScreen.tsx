@@ -1,12 +1,15 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Alert, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Dimensions, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { Button, ButtonSocial, Header, Screen, Text, TextField } from "../components"
 import { colors, spacing } from "../theme"
 import auth, { firebase } from "@react-native-firebase/auth"
 import database from "@react-native-firebase/database"
+import { RadioButton } from "react-native-paper"
+
+const Width = Dimensions.get("window").width
 
 // STOP! READ ME FIRST!
 // To fix the TS error below, you'll need to add the following things in your navigation config:
@@ -27,6 +30,7 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [passwordRepeat, setPasswordRepeat] = useState("")
+    const [checked, setChecked] = useState(false)
     const onGoBackPress = () => {
       navigation.goBack()
     }
@@ -52,15 +56,11 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
         setPasswordRepeat("")
       } else if (password === passwordRepeat) {
         try {
-          
           await auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(() => {
-
-            })
+            .then(() => {})
             .then(() => {
               console.log("Register with:" + email)
-              
             })
             .catch((e) => {
               if (e.code === "auth/email-already-in-use") {
@@ -72,7 +72,7 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
               }
               console.log("There has been a problem with your fetch operation: " + e.message)
             })
-            
+
           await auth()
             .currentUser.updateProfile({ displayName: name })
             .then(() => {
@@ -84,6 +84,7 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
                   email: auth().currentUser.email,
                   // photoUrl: auth().currentUser.photoURL,
                   phoneNumber: auth().currentUser.phoneNumber,
+                  checked,
                 })
                 .then(() => {
                   // setLoading(false)
@@ -94,7 +95,7 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
                   //     onPress: () => {},
                   //     style: "cancel",
                   //   },
-                    // { text: "OK", onPress: () => goToLogin() },
+                  // { text: "OK", onPress: () => goToLogin() },
                   // ])
                   resetForm()
                   // goToLogin()
@@ -172,6 +173,27 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
           // RightAccessory={PasswordRightAccessory}
         />
 
+        <Text style={{fontWeight: "700", fontSize: 16}}>You are?</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={$radioButton}>
+            <Text>Teacher</Text>
+            <RadioButton
+              color="#000"
+              value="Teacher"
+              status={checked === true ? "checked" : "unchecked"}
+              onPress={() => setChecked(true)}
+            />
+          </View>
+          <View style={$radioButton}>
+            <Text>Student</Text>
+            <RadioButton
+              color="#000"
+              value="Student"
+              status={checked === false ? "checked" : "unchecked"}
+              onPress={() => setChecked(false)}
+            />
+          </View>
+        </View>
         <Button
           testID="login-button"
           text="Tap to sign up"
@@ -195,6 +217,11 @@ const $signIn: TextStyle = {
   marginBottom: spacing.small,
 }
 
+const $radioButton: ViewStyle = {
+  width: Width * 0.4,
+  flexDirection: "row",
+  alignItems: "center",
+}
 const $enterDetails: TextStyle = {
   marginBottom: spacing.large,
 }

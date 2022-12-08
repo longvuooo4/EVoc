@@ -32,7 +32,6 @@ export const DetailFolderScreen: FC<StackScreenProps<AppStackScreenProps, "Detai
         .ref(`Folder/${id}/`)
         .once("value", (snapshot) => {
           setListFolder(Object.values(snapshot.val()))
-          console.log(listFolder)
 
           // setListFolder(listkey)
         })
@@ -47,7 +46,7 @@ export const DetailFolderScreen: FC<StackScreenProps<AppStackScreenProps, "Detai
           <Text style={$header}>{id}</Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <Buttontest text="Test" />
+          <Buttontest text="Test" onPress={()=> navigation.navigate("Test", {id})} />
           <Buttontest text="Learn" />
           <Buttontest text="Listen" />
         </View>
