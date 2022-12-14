@@ -32,12 +32,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
         .signInWithCredential(googleCredential)
         .then((userCredentials) => {
           console.log(googleCredential)
-
           navigation.navigate("Home")
-          // navigation.reset({
-          //   index: 0,
-          //   // routes: [{ name: "user" }],
-          // })
         })
         .catch((err) => {
           console.log("Login Fail !!\n" + err)
@@ -47,10 +42,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
     }
   }
   const authPasswordInput = useRef<TextInput>()
-  // const navigation = useNavigation()
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  // const [isSubmitted, setIsSubmitted] = useState(false)
-  // const [attemptsCount, setAttemptsCount] = useState(0)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const {
@@ -66,8 +58,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
           Alert.alert("Đăng nhập thành công", `Chào mừng bạn ${auth().currentUser.displayName}`)
         })
         .catch((error) => {
-          // console.log(error.code)
-
           if (error.code === "auth/invalid-email") {
             Alert.alert("Lỗi đăng nhập", "Email không đúng cú pháp")
           }
@@ -99,9 +89,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       safeAreaEdges={["top", "bottom"]}
     >
       <Text testID="login-heading" text="Sign In" preset="heading" style={$signIn} />
-      {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
-      {/* {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
-
       <TextField
         value={email}
         onChangeText={setEmail}
@@ -114,7 +101,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
         placeholderTx="loginScreen.emailFieldPlaceholder"
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
-
       <TextField
         ref={authPasswordInput}
         value={password}
@@ -126,12 +112,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
         secureTextEntry={isAuthPasswordHidden}
         labelTx="loginScreen.passwordFieldLabel"
         placeholderTx="loginScreen.passwordFieldPlaceholder"
-        // helper={errors?.authPassword}
-        // status={errors?.authPassword ? "error" : undefined}
         onSubmitEditing={onLoginPress}
-        // RightAccessory={PasswordRightAccessory}
       />
-
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"

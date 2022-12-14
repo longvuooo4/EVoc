@@ -64,9 +64,6 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
           en: en,
           type: type,
         })
-
-        
-      
       setEn("")
       setVn("")
       Alert.alert("", "Vocabulary added", [{ text: "OK" }])

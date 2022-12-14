@@ -26,7 +26,7 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
     useEffect(() => {
       itemRef.child(`${id}/`).once("value", (snapshot) => {
         setAllQuestions(Object.values(snapshot.val()))
-        console.log(allQuestions);
+        // console.log(allQuestions);
         
       })
       itemRef.child(`${id}/`).limitToFirst(4).once('value').then(snapshot =>
@@ -48,13 +48,16 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
     const [showNextButton, setShowNextButton] = useState(false)
     const [showScoreModal, setShowScoreModal] = useState(false)
     limit.map((item) => {
-        options = [...options, item.vn]
+        options = [...options, [item.vn,item.idVod]]
     })
     const validateAnswer = (selectedOption) => {
-        let correct_option = allQuestions[currentQuestionIndex]['vn'];
-        
+        console.log(selectedOption);
         setCurrentOptionSelected(selectedOption);
+        
+        let correct_option = allQuestions[currentQuestionIndex]["idVoc"];
+        
         setCorrectOption(correct_option);
+        console.log(correctOption); 
         setIsOptionsDisabled(true);
         if(selectedOption==correct_option){
             // Set Score
@@ -128,19 +131,19 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
         return (
             <View>
                 {
-                    options.map(option => (
+                    options.map(option => (                        
                         <TouchableOpacity 
                         onPress={()=> validateAnswer(option)}
                         disabled={isOptionsDisabled}
                         key={option}
                         style={{
                             borderWidth: 3, 
-                            borderColor: option==correctOption 
+                            borderColor: option.idVoc==correctOption 
                             ? '#00C851'
                             : option==currentOptionSelected 
                             ? '#ff4444' 
                             : '#1E90FF'+'40',
-                            backgroundColor: option==correctOption 
+                            backgroundColor: option.idVoc==correctOption 
                             ? '#00C851' +'20'
                             : option==currentOptionSelected 
                             ? '#ff4444' +'20'

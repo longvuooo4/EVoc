@@ -25,7 +25,6 @@ import {
   SignupScreen, TestScreen, UserUpdateProfileScreen, // @demo remove-current-line
   WelcomeScreen,
 } from "../screens"
-import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import auth from "@react-native-firebase/auth"
 import { AddFolderScreen } from "../screens/AddFolderScreen"
@@ -51,7 +50,6 @@ export type AppStackParamList = {
   Folder:{
     folder: FolderE
   } 
-  Demo: NavigatorScreenParams<DemoTabParamList> // @demo remove-current-line
   DetailFolder: undefined
   DetailUser: undefined
   UserUpdateProfile: {
@@ -98,12 +96,11 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={user ? "Welcome" : "Login"} // @demo remove-current-line
+      initialRouteName={user ? "Home" : "Login"} // @demo remove-current-line
     >
       {/* @demo remove-block-start */}
       {user ? (
         <>
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="DetailFolder" component={DetailFolderScreen} />
           <Stack.Screen name="DetailUser" component={DetailUserScreen} />

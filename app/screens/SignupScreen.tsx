@@ -82,23 +82,13 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
                   uid: auth().currentUser.uid,
                   name: auth().currentUser.displayName,
                   email: auth().currentUser.email,
-                  // photoUrl: auth().currentUser.photoURL,
                   phoneNumber: auth().currentUser.phoneNumber,
                   checked,
                 })
                 .then(() => {
-                  // setLoading(false)
                   Alert.alert("Register successful", `Chúc mừng bạn ${name} đã đăng ký thành công`)
-                  // Alert.alert("", "User account created & signed in!", [
-                  //   {
-                  //     text: "Cancel",
-                  //     onPress: () => {},
-                  //     style: "cancel",
-                  //   },
-                  // { text: "OK", onPress: () => goToLogin() },
-                  // ])
+
                   resetForm()
-                  // goToLogin()
                 })
             })
         } catch (e) {}
@@ -126,7 +116,6 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
           keyboardType="email-address"
           labelTx="loginScreen.emailFieldLabel"
           placeholderTx="loginScreen.emailFieldPlaceholder"
-          // onSubmitEditing={() => authPasswordInput.current?.focus()}
         />
         <TextField
           value={name}
