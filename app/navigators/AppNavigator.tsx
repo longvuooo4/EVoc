@@ -20,6 +20,7 @@ import { useStores } from "../models" // @demo remove-current-line
 import {
   DetailFolderScreen,
   DetailUserScreen,
+  HistoryScreen,
   HomeScreen,
   LoginScreen,
   SignupScreen, TestScreen, UserUpdateProfileScreen, // @demo remove-current-line
@@ -59,6 +60,7 @@ export type AppStackParamList = {
     folder: FolderE
   } 
   Test: undefined
+  History: undefined
 }
 
 /**
@@ -107,6 +109,7 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="UserUpdateProfile" component={UserUpdateProfileScreen} />
           <Stack.Screen name="AddFolder" component={AddFolderScreen} />
           <Stack.Screen name="Test" component={TestScreen} />
+          <Stack.Screen name="History" component={HistoryScreen} />
 
           
         </>

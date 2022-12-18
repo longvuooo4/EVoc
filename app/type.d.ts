@@ -3,6 +3,7 @@ declare interface FolderE {
     en: string
     vn: string
     type: string
+    more: string
 }
 declare interface InfoUser {
     birthday: string

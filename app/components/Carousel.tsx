@@ -16,7 +16,7 @@ import { Text } from "./Text"
 import { memo, useRef, useState } from "react"
 import Octicons from "react-native-vector-icons/Octicons"
 import FlipCard from "react-native-flip-card"
-import Tts from 'react-native-tts';
+import Tts from "react-native-tts"
 
 export interface CarouselProps {
   /**
@@ -45,7 +45,7 @@ export const Carousel = memo(
       const changeHeart = () => {
         setIsHeart(!isHeart)
       }
-      Tts.setDefaultLanguage('en-US')
+      Tts.setDefaultLanguage("en-US")
       return (
         <FlipCard
           style={styles.tag}
@@ -57,19 +57,57 @@ export const Carousel = memo(
           clickable={true}
         >
           <View style={styles.card}>
-            <View style={{flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10}}>
-            <TouchableOpacity onPress={()=>{Tts.speak(item.en)}}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  Tts.speak(item.en)
+                }}
+              >
+                <Octicons style={[styles.speaker]} name="unmute" />
+              </TouchableOpacity>
+            </View>
+            <View style={{height: Height*0.3, marginBottom: 70, alignSelf: "center", justifyContent: "center"}}>
+              <Text style={[styles.voc,{paddingTop: 50, lineHeight: 50}]} ellipsizeMode="tail">{item.en} ( {item.type} )</Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#d9f7cf",
+                height: 120,
+                width: Width * 0.95,
+                position: "absolute",
+                bottom: -35,
+                right: 0,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  Tts.speak(item.more)
+                }}
+              >
                 <Octicons
-                  style={[styles.speaker]}
+                  style={[
+                    styles.speaker,
+                    { position: "absolute", bottom: -33, left: 15, fontSize: 25, color: "black" },
+                  ]}
                   name="unmute"
                 />
               </TouchableOpacity>
+              <Text style={styles.more} numberOfLines={2} maxFontSizeMultiplier={2}>
+                Ex: {item.more}
+              </Text>
             </View>
-            <Text style={styles.voc}>{item.en}</Text>
           </View>
 
-          <View style={styles.card}>
-            <Text style={[styles.voc,  {marginTop: 60}]}>{item.vn}</Text>
+          <View style={[styles.card, {height: Height*0.5, marginBottom: 70, alignSelf: "center", justifyContent: "center"}]}>
+            <Text style={[styles.voc, { marginTop: 30, lineHeight: 50 }]} numberOfLines={5}>
+              {item.vn}
+            </Text>
           </View>
         </FlipCard>
       )
@@ -167,29 +205,24 @@ const styles = StyleSheet.create({
     margin: 8,
     color: "#ffff",
   },
-  speaker:{
+  speaker: {
     fontSize: 42,
     alignSelf: "flex-end",
     margin: 8,
     color: "#ffff",
   },
-  redHeart: { color: "red" },
   voc: {
-    fontSize: 48,
+    fontSize: 42,
     color: "#000000",
-    // marginLeft: 20,
-    // marginTop: 20,
-    // marginRight: 60,
-    lineHeight: Height * 0.4,
-    textAlign: "center",
+    width: Width * 0.8,
+    textAlign: "center"
   },
-  // viewVoc:{
-  //   width: Width,
-  //   height: Height,
-  //   justifyContent: "center",
-  //   backgroundColor: "red",
-
-  // },
+  more: {
+    marginHorizontal: 20,
+    marginTop: 30,
+    fontSize: 20,
+    justifyContent: "center",
+  },
   refresh: {
     // backgroundColor: 'white',
     // justifyContent: 'center',

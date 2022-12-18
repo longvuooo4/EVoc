@@ -130,6 +130,10 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
               title={"Update Proflie"}
               onPress={() => navigation.navigate("UserUpdateProfile", { detailsUser: infoUser })}
             />
+            <CustomButton
+              title={"History Test"}
+              onPress={() => navigation.navigate("History")}
+            />
           </View>
         </View>
       </Screen>

@@ -40,8 +40,10 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
         .on("value", (snapshot) => {
           const listkey = Object.keys(snapshot.val())
           setListFolder(listkey)
+          setFilterData(listkey)
         })
       return () => {
+        setFilterData([])
         setListFolder([])
       }
     }, [])
@@ -74,16 +76,24 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
         />
       )
     }
-    const searchFilter = (text) => {
+    const searchFilterFunction = (text) => {
+      // Check if searched text is not blank
       if (text) {
-        const newData = listFolder.filter((item) => {
+        // Inserted text is not blank
+        // Filter the masterDataSource
+        // Update FilteredDataSource
+        const newData = listFolder.filter(function (item) {
           const itemData = item ? item.toUpperCase() : "".toUpperCase()
           const textData = text.toUpperCase()
           return itemData.indexOf(textData) > -1
         })
         setFilterData(newData)
+        setSearch(text)
       } else {
+        // Inserted text is blank
+        // Update FilteredDataSource with masterDataSource
         setFilterData(listFolder)
+        setSearch(text)
       }
     }
 
@@ -111,14 +121,15 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
         <SearchBar
           round={true}
           lightTheme={true}
-          containerStyle={{backgroundColor: "#d9f7cf"}}
+          containerStyle={{ backgroundColor: "#d9f7cf" }}
           inputContainerStyle={$textField}
           placeholder="Search..."
           autoCapitalize="none"
-          autoCorrect={false}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={search}
         />
         <FlatList
-          data={listFolder}
+          data={filterData}
           renderItem={({ item }) => {
             return (
               <TouchableOpacity

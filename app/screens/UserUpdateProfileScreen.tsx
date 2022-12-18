@@ -24,6 +24,7 @@ export const UserUpdateProfileScreen: FC<
   const [phone, setPhone] = useState(user?.phoneNumber)
   const [gender, setGender] = useState(user?.gender)
   const [date, setDate] = useState(user?.birthday)
+  const [checked, setChecked] = useState(user?.checked)
   const options = [
     { label: "Male", value: true },
     { label: "Female", value: false },
@@ -41,6 +42,7 @@ export const UserUpdateProfileScreen: FC<
         phoneNumber: phone,
         birthday: date,
         gender: gender, //true is male - false is female
+        checked: checked
       })
       .then(() => {
         console.log("Update Info Successfully !!")

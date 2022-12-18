@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 50,
     borderRadius: 25,
+    marginBottom: 10,
     justifyContent: "center",
   },
   titleButton: {

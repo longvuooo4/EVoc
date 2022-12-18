@@ -10,16 +10,18 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  ScrollView,
 } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, TextField } from "../components"
+import { ChooseImage, Screen, TextField } from "../components"
 import { Header } from "@rneui/themed"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import database from "@react-native-firebase/database"
 import uuid from "react-native-uuid"
 import RadioForm from "react-native-simple-radio-button"
+import de from "date-fns/esm/locale/de/index.js"
 
 const Width = Dimensions.get("window").width
 const Height = Dimensions.get("window").height
@@ -37,13 +39,14 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
     const [folder, setFolder] = useState<FolderE>()
     const [en, setEn] = useState(folder?.en)
     const [vn, setVn] = useState(folder?.vn)
+    const [more, setMore] = useState(folder?.more)
     const [type, setType] = useState(folder?.type)
     // const [idVoc, setIdVoc] = useState(folder?.idVoc)
     const [id, setId] = useState("")
     const [checked, setChecked] = useState(false)
     const [listVoc, setListVoc] = useState<FolderE[]>([])
     const [listVocS, setListVocS] = useState<FolderE[]>([])
-    const [uid, setUid] = useState(uuid.v4())
+    const uid = uuid.v4()
     const [listKey, setListKey] = useState([])
 
     // let uid = uuid.v4()
@@ -63,17 +66,19 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
           vn: vn,
           en: en,
           type: type,
+          more: more,
         })
       setEn("")
       setVn("")
+      setMore("")
       Alert.alert("", "Vocabulary added", [{ text: "OK" }])
-      setListVoc([...listVoc, { idVoc: uid,en: en, type: type, vn: vn }])
+      setListVoc([...listVoc, { idVoc: uid, en: en, type: type, vn: vn, more: more }])
     }
     const addTitle = () => {
       setChecked(true)
       database()
-      .ref("Folder/" + id)
-      .update({})
+        .ref("Folder/" + id)
+        .update({})
     }
     let add
     if (checked == false) {
@@ -95,6 +100,7 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
                 backgroundColor: !checked == true ? "#4ea9fd" : "gray",
                 width: Width * 0.3,
                 marginTop: 10,
+                alignSelf:"center"
               },
             ]}
             disabled={!checked == true ? false : true}
@@ -111,22 +117,21 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
       )
     }
     const deleteVoc = () => {
-        try {
-          listKey.map((item) => {
-            console.log('====================================');
-            console.log(item);
-            console.log('====================================');
-            // database().ref("Folder/" + id + "/" + item).remove()
-          })
-        } catch (error) {
-          console.log(error)
-        }
-      
+      try {
+        listKey.map((item) => {
+          console.log("====================================")
+          console.log(item)
+          console.log("====================================")
+          // database().ref("Folder/" + id + "/" + item).remove()
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
     const cancel = () => {
-      if (listVoc == null || listVoc == undefined || listVoc == listVocS) {
+      if (id === "") {
         navigation.goBack()
-      } else if (listVoc != listVocS) {
+      } else {
         Alert.alert("", "Do you want to go back without saving?", [
           {
             text: "Yes",
@@ -164,64 +169,97 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
             </Text>
           }
         />
-        {add}
-        <View style={{ borderBottomWidth: 1, margin: 10 }} />
-        <View
-          style={{
-            marginBottom: 15,
-            marginTop: 30,
-            marginHorizontal: 10,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TextInput
-            placeholder="Enter a Term"
-            style={[$input, { width: Width * 0.45 }]}
-            placeholderTextColor="#0A092D"
-            onChangeText={(e) => setEn(e)}
-            value={en}
-          />
-          <TextInput
-            placeholder="Enter a Definition"
-            style={[$input, { width: Width * 0.45 }]}
-            placeholderTextColor="#0A092D"
-            onChangeText={(e) => setVn(e)}
-            value={vn}
-          />
-        </View>
-        <View style={{ width: Width, justifyContent: "center", alignItems: "center" }}>
-          <RadioForm
-            labelStyle={{ fontSize: 18, color: "#000", marginHorizontal: 8}}
-            labelColor={"#ffa717"}
-            labelHorizontal={false}
-            formHorizontal={true}
-            radio_props={options}
-            initial={0}
-            obj={type}
-            animation={true}
-            onPress={(value) => {
-              setType(value)
-            }}
-          />
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 15 }}>
-          <TouchableOpacity
-            style={[$button, { backgroundColor: "#4ea9fd" }]}
-            onPress={() => addVoc()}
-          >
-            <Text style={{ fontSize: 18, color: "#ffff", paddingVertical: 8 }}>Add Vocabulary</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[$button, { backgroundColor: "red" }]} onPress={() => deleteVoc()}>
-            <Text style={{ fontSize: 18, color: "#ffff", paddingVertical: 8 }}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ borderBottomWidth: 1, margin: 10 }} />
-        <View style={{ flexDirection: "row" }}>
-          <Text style={$text}>Term</Text>
-          <Text style={[$text, { paddingLeft: Width * 0.2 }]}>Definition</Text>
-          <Text style={[$text, { paddingLeft: Width * 0.1 }]}>Type</Text>
-        </View>
+            {add}
+        {checked ? (
+          <ScrollView>
+            <View style={{ borderBottomWidth: 1, marginHorizontal: 10, marginVertical: 5 }} />
+            <View
+              style={{
+                marginBottom: 15,
+                marginTop: 10,
+                marginHorizontal: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <TextInput
+                placeholder="Enter a Term"
+                style={[$input, { width: Width * 0.45 }]}
+                placeholderTextColor="#0A092D"
+                onChangeText={(e) => setEn(e)}
+                value={en}
+              />
+              <TextInput
+                placeholder="Enter a Definition"
+                style={[$input, { width: Width * 0.45 }]}
+                placeholderTextColor="#0A092D"
+                onChangeText={(e) => setVn(e)}
+                value={vn}
+              />
+            </View>
+            <View style={{ width: Width, justifyContent: "center", alignItems: "center" }}>
+              <RadioForm
+                labelStyle={{ fontSize: 18, color: "#000", marginHorizontal: 8 }}
+                labelColor={"#ffa717"}
+                labelHorizontal={false}
+                formHorizontal={true}
+                radio_props={options}
+                initial={0}
+                obj={type}
+                animation={true}
+                onPress={(value) => {
+                  setType(value)
+                }}
+              />
+            </View>
+            <View>
+              <TextInput
+                placeholder="Enter more information"
+                style={[
+                  $input,
+                  {
+                    width: Width * 0.96,
+                    marginLeft: 10,
+                    height: Height * 0.1,
+                    textAlignVertical: "top",
+                    maxHeight: Height * 0.15,
+                  },
+                ]}
+                placeholderTextColor="#0A092D"
+                onChangeText={(e) => setMore(e)}
+                numberOfLines={3}
+                multiline={true}
+                value={more}
+              />
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 15 }}
+            >
+              <TouchableOpacity
+                style={[$button, { backgroundColor: "#4ea9fd" }]}
+                onPress={() => addVoc()}
+              >
+                <Text style={{ fontSize: 18, color: "#ffff", paddingVertical: 8 }}>
+                  Add Vocabulary
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[$button, { backgroundColor: "red" }]}
+                onPress={() => deleteVoc()}
+              >
+                <Text style={{ fontSize: 18, color: "#ffff", paddingVertical: 8 }}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ borderBottomWidth: 1, margin: 10 }} />
+            <View style={{ flexDirection: "row" }}>
+              <Text style={$text}>Term</Text>
+              <Text style={[$text, { paddingLeft: Width * 0.2 }]}>Definition</Text>
+              <Text style={[$text, { paddingLeft: Width * 0.1 }]}>Type</Text>
+            </View>
+          </ScrollView>
+        ) : (
+          <View></View>
+        )}
         <FlatList
           data={listVoc}
           renderItem={({ item }) => {
