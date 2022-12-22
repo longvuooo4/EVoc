@@ -1,8 +1,7 @@
 import * as React from "react"
-import { Dimensions, StyleProp, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native"
+import { Dimensions, StyleProp, TextStyle, View, ViewStyle, TouchableOpacity,Text } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "../theme"
-import { Text } from "./Text"
 
 
 const Width = Dimensions.get("window").width

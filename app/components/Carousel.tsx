@@ -17,34 +17,34 @@ import { memo, useRef, useState } from "react"
 import Octicons from "react-native-vector-icons/Octicons"
 import FlipCard from "react-native-flip-card"
 import Tts from "react-native-tts"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export interface CarouselProps {
   /**
    * An optional style override useful for padding & margin.
    */
   data?
+  checked: boolean
+  color?
 }
 
 /**
  * Describe your component here
  */
+
 export const Carousel = memo(
   observer(function Carousel(props: CarouselProps) {
-    const { data } = props
+    const { data, checked, color } = props
     const [currentIndex, setCurrentIndex] = useState(0)
 
     const scrollX = useRef(new Animated.Value(0)).current
     const slideRef = useRef(null)
-    const viewableItemsChanged = useRef(({ viewableItems }: any) => {
-      setCurrentIndex(viewableItems[0].index)
-    }).current
+    // const viewableItemsChanged = useRef(({ viewableItems }: any) => {
+    //   checked ? setCurrentIndex(0) :
+    //   setCurrentIndex(viewableItems[0].index)
+    // }).current
     const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current
-    const CarouselItem = ({ item }) => {
-      const [isHeart, setIsHeart] = useState(false)
-
-      const changeHeart = () => {
-        setIsHeart(!isHeart)
-      }
+    const CarouselItem = ({ item, index }) => {
       Tts.setDefaultLanguage("en-US")
       return (
         <FlipCard
@@ -62,6 +62,7 @@ export const Carousel = memo(
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginHorizontal: 10,
+                flex: 1.5,
               }}
             >
               <TouchableOpacity
@@ -72,16 +73,25 @@ export const Carousel = memo(
                 <Octicons style={[styles.speaker]} name="unmute" />
               </TouchableOpacity>
             </View>
-            <View style={{height: Height*0.3, marginBottom: 70, alignSelf: "center", justifyContent: "center"}}>
-              <Text style={[styles.voc,{paddingTop: 50, lineHeight: 50}]} ellipsizeMode="tail">{item.en} ( {item.type} )</Text>
+            <View
+              style={{
+                flex: 6,
+                height: Height * 0.3,
+                marginBottom: 70,
+                alignSelf: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={[styles.voc, { paddingTop: 50, lineHeight: 50 }]} ellipsizeMode="tail">
+                {item.en} ( {item.type} )
+              </Text>
             </View>
             <View
               style={{
                 backgroundColor: "#d9f7cf",
                 height: 120,
                 width: Width * 0.95,
-                position: "absolute",
-                bottom: -35,
+                flex: 3.5,
                 right: 0,
               }}
             >
@@ -102,9 +112,36 @@ export const Carousel = memo(
                 Ex: {item.more}
               </Text>
             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1.7,
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View>
+                {index !== 0 && <Ionicons name="chevron-back-outline" style={{ fontSize: 35 }} />}
+              </View>
+              <View>
+                {index !== data.length - 1 && (
+                  <Ionicons name="chevron-forward-outline" style={{ fontSize: 35 }} />
+                )}
+              </View>
+            </View>
           </View>
 
-          <View style={[styles.card, {height: Height*0.5, marginBottom: 70, alignSelf: "center", justifyContent: "center"}]}>
+          <View
+            style={[
+              styles.card,
+              {
+                height: Height * 0.5,
+                marginBottom: 70,
+                alignSelf: "center",
+                justifyContent: "center",
+              },
+            ]}
+          >
             <Text style={[styles.voc, { marginTop: 30, lineHeight: 50 }]} numberOfLines={5}>
               {item.vn}
             </Text>
@@ -112,36 +149,34 @@ export const Carousel = memo(
         </FlipCard>
       )
     }
-    const Paginator = ({ data, scrollX }: any) => {
+    const ListItem = ({ item }) => {
+      Tts.setDefaultLanguage("en-US")
       return (
         <View
           style={{
             flexDirection: "row",
-            height: 32,
-            justifyContent: "center",
+            borderWidth: 1,
+            borderRadius: 20,
+            height: 100,
             alignItems: "center",
-            marginTop: 15,
+            margin: 15,
+            paddingHorizontal: 20,
+            backgroundColor: color,
           }}
         >
-          {data.map((_item: any, index: number) => {
-            const inputRange = [(index - 1) * Width, index * Width, (index + 1) * Width]
-            const dotWidth = scrollX.interpolate({
-              inputRange,
-              outputRange: [10, 20, 10],
-              extrapolate: "clamp",
-            })
-            const opacity = scrollX.interpolate({
-              inputRange,
-              outputRange: [0.3, 1, 0.3],
-              extrapolate: "clamp",
-            })
-            return (
-              <Animated.View
-                style={[styles.dot, { width: dotWidth, opacity }]}
-                key={index.toString()}
-              />
-            )
-          })}
+          <TouchableOpacity
+            onPress={() => {
+              Tts.speak(item.en)
+            }}
+          >
+            <Octicons style={{position: "absolute", top: -40, left: 0, fontSize: 24}} name="unmute" />
+          </TouchableOpacity>
+          <Text numberOfLines={2} maxFontSizeMultiplier={2}>
+            {item.en} ({item.type}) :{" "}
+          </Text>
+          <Text numberOfLines={3} maxFontSizeMultiplier={3} style={{ width: "50%" }}>
+            {item.vn}
+          </Text>
         </View>
       )
     }
@@ -150,21 +185,28 @@ export const Carousel = memo(
         <View style={{ flex: 1 }}>
           <FlatList
             data={data}
-            renderItem={({ item }) => <CarouselItem item={item} />}
-            horizontal
+            initialNumToRender={3}
+            maxToRenderPerBatch={2}
+            updateCellsBatchingPeriod={1000}
+            renderItem={
+              checked
+                ? ({ item }) => <ListItem item={item} />
+                : ({ item, index }) => <CarouselItem item={item} index={index} />
+            }
+            horizontal={checked ? false : true}
             showsHorizontalScrollIndicator={false}
-            pagingEnabled
+            pagingEnabled={checked ? false : true}
             bounces={false}
-            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+            onScroll={checked ?null : Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
               useNativeDriver: false,
             })}
-            scrollEventThrottle={32}
-            onViewableItemsChanged={viewableItemsChanged}
+            scrollEventThrottle={25}
+            // onViewableItemsChanged={viewableItemsChanged}
             viewabilityConfig={viewConfig}
             ref={slideRef}
           />
 
-          <Paginator data={data} scrollX={scrollX} />
+          {/* <Paginator data={data} scrollX={scrollX} /> */}
         </View>
       )
     }
@@ -185,11 +227,11 @@ const Height = Dimensions.get("window").height
 const styles = StyleSheet.create({
   tag: {
     width: Width * 0.95,
-    height: Height * 0.6,
     backgroundColor: "#C76542",
     marginHorizontal: (Width - Width * 0.95) / 2,
     borderRadius: 20,
     marginTop: 15,
+    marginBottom: 50
   },
   card: {
     shadowColor: "rgba(0,0,0,0.5)",
@@ -198,12 +240,7 @@ const styles = StyleSheet.create({
       height: 1,
     },
     shadowOpacity: 0.5,
-  },
-  heartIcon: {
-    fontSize: 42,
-    alignSelf: "flex-end",
-    margin: 8,
-    color: "#ffff",
+    flex: 1,
   },
   speaker: {
     fontSize: 42,
@@ -215,7 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 42,
     color: "#000000",
     width: Width * 0.8,
-    textAlign: "center"
+    textAlign: "center",
   },
   more: {
     marginHorizontal: 20,

@@ -12,20 +12,15 @@ import { spacing } from "../theme"
 // import { useStores } from "../models"
 const Width = Dimensions.get("window").width
 const Height = Dimensions.get("window").height
-// STOP! READ ME FIRST!
-// To fix the TS error below, you'll need to add the following things in your navigation config:
-// - Add `DetailFolder: undefined` to AppStackParamList
-// - Import your screen, and add it to the stack:
-//     `<Stack.Screen name="DetailFolder" component={DetailFolderScreen} />`
-// Hint: Look for the 🔥!
-
+const color = ["#59C1BD", "#D6E4E5", "#B3FFAE", "#EB6440"]
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
 export const DetailFolderScreen: FC<StackScreenProps<AppStackScreenProps, "DetailFolder">> =
   observer(function DetailFolderScreen({ route, navigation }) {
     const { id } = route.params
-    console.log(id)
     const [listFolder, setListFolder] = useState([])
+    const [checked, setChecked] = useState(false)
+    const [random, setRandom] = useState(0)
 
     useEffect(() => {
       database()
@@ -35,29 +30,34 @@ export const DetailFolderScreen: FC<StackScreenProps<AppStackScreenProps, "Detai
 
           // setListFolder(listkey)
         })
+
       return () => {
         setListFolder([])
       }
     }, [])
 
     return (
-      <Screen style={$root} preset="scroll">
-        <View style={{justifyContent: "center", alignItems: "center", marginVertical: 15,}}>
+      <View style={$root}>
+        <View style={{ justifyContent: "center", alignItems: "center", marginTop: 50, marginBottom: 15 }}>
           <Text style={$header}>{id}</Text>
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <Buttontest text="Test" onPress={()=> navigation.navigate("Test", {id})} />
-          <Buttontest text="Learn" />
-          <Buttontest text="Listen" />
+        <View style={{ flexDirection: "row", justifyContent: "space-around", marginBottom: 5 }}>
+          <Buttontest text="Test" onPress={() => navigation.navigate("Test", { id })} />
+          <Buttontest
+            text={checked ? "FlashCard" : "List"}
+            onPress={() => {
+              setChecked(!checked)
+              setRandom(Math.floor(Math.random() * color.length))
+            }}
+          />
         </View>
-        <Carousel data={listFolder} />
-      </Screen>
+        <Carousel data={listFolder} checked={checked} color={color[random]} />
+      </View>
     )
   })
 
 const $root: ViewStyle = {
   flex: 1,
-  paddingTop: Height * 0.05,
 }
 const $header: TextStyle = {
   // marginLeft: 50,
@@ -66,5 +66,5 @@ const $header: TextStyle = {
   fontWeight: "bold",
   fontSize: spacing.huge,
   marginBottom: spacing.small,
-  textTransform: "capitalize"
+  textTransform: "capitalize",
 }

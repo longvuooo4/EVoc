@@ -25,12 +25,21 @@ export const HistoryScreen: FC<StackScreenProps<AppStackScreenProps, "History">>
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
     const [list, setList] = useState([])
+    const [random, setRandom] = useState(0)
+    const color = ["#59C1BD", "#D6E4E5", "#B3FFAE", "#EB6440"]
     useEffect(() => {
       database()
         .ref("History/" + auth().currentUser.uid)
+        .orderByChild("date")
         .on("value", (snapshot) => {
-          setList(Object.values(snapshot.val()))
+          if (snapshot.val()) {
+            setList(Object.values(snapshot.val()))
+          }
+          else{
+            setList([])
+          }
         })
+      setRandom(Math.floor(Math.random() * color.length))
       return () => {
         setList([])
       }
@@ -38,6 +47,7 @@ export const HistoryScreen: FC<StackScreenProps<AppStackScreenProps, "History">>
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
+
     return (
       <View style={styles.container}>
         <Header
@@ -57,19 +67,21 @@ export const HistoryScreen: FC<StackScreenProps<AppStackScreenProps, "History">>
             {auth().currentUser.displayName}
           </Text>
         </View>
-        <View style={{ flexDirection: "row", borderWidth: 1 }}>
-          <Text style={[styles.text, { flex: 1.5, fontSize: 24 }]}>Name</Text>
-          <Text style={[styles.text, { flex: 2, fontSize: 24 }]}>Score</Text>
+        <View style={[{ flexDirection: "row" }, styles.viewHistory]}>
+          <Text style={[styles.text, { fontSize: 24, flex: 1 }]}>Name</Text>
+          <Text style={[styles.text, { fontSize: 24, flex: 1 }]}>Score</Text>
+          <Text style={[styles.text, { fontSize: 24, flex: 1 }]}>Date</Text>
         </View>
         <FlatList
           data={list}
           renderItem={({ item }) => {
             return (
-              <View style={styles.viewHistory}>
-                <Text style={[styles.text, { flex: 1.5 }]}>{item.uid}</Text>
-                <Text style={[styles.text, { flex: 2, marginLeft: 20 }]}>
+              <View style={[styles.viewHistory, { backgroundColor: color[random] }]}>
+                <Text style={[styles.text, { flex: 1 }]}>{item.uid}</Text>
+                <Text style={[styles.text, { flex: 1 }]}>
                   {item.score} / {item.allQuestions}
                 </Text>
+                <Text style={[styles.text, { flex: 1 }]}>{item.date}</Text>
               </View>
             )
           }}
@@ -88,9 +100,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000",
   },
-  viewHistory: { flexDirection: "row", marginVertical: 10 },
+  viewHistory: {
+    justifyContent: "space-around",
+    flexDirection: "row",
+    marginVertical: 10,
+    borderWidth: 1,
+    paddingVertical: 10,
+    width: "95%",
+    marginLeft: 10,
+    borderRadius: 50,
+  },
   text: {
-    fontSize: 20,
+    fontSize: 16,
     color: "black",
     fontWeight: "bold",
     textTransform: "capitalize",

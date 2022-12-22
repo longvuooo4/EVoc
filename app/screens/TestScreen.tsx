@@ -40,6 +40,7 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
     const [showNextButton, setShowNextButton] = useState(false)
     const [showScoreModal, setShowScoreModal] = useState(false)
     const [checked, setChecked] = useState(false)
+    let today = new Date()
     useEffect(() => {
       itemRef.child(`${id}/`).once("value", (snapshot) => {
         setAllQuestions(Object.values(snapshot.val()))
@@ -297,7 +298,8 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
           .set({
             uid: id,
             score: score,
-            allQuestions: allQuestions.length
+            allQuestions: allQuestions.length,
+            date: today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear()
           })
       }
       else{
@@ -310,7 +312,8 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
           .set({
             uid: id,
             score: score,
-            allQuestions: allQuestions.length
+            allQuestions: allQuestions.length,
+            date: today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear()
           })
       }
     }

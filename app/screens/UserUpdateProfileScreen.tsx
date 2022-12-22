@@ -12,7 +12,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import DatePicker from "react-native-date-picker"
 import moment from "moment"
 import Iconicons from "react-native-vector-icons/Ionicons"
-
+import auth from "@react-native-firebase/auth"
 export const UserUpdateProfileScreen: FC<
   StackScreenProps<AppStackParamList, "UserUpdateProfile">
 > = observer(function UserUpdateProfileScreen({ navigation, route }) {
@@ -37,7 +37,7 @@ export const UserUpdateProfileScreen: FC<
       .set({
         uid: firebase.auth().currentUser.uid,
         name: firebase.auth().currentUser.displayName,
-        email: email,
+        email: firebase.auth().currentUser.email,
         photoUrl: "https://i.pinimg.com/originals/12/61/dd/1261dda75d943cbd543cb86c15f31baa.jpg",
         phoneNumber: phone,
         birthday: date,
@@ -46,6 +46,8 @@ export const UserUpdateProfileScreen: FC<
       })
       .then(() => {
         console.log("Update Info Successfully !!")
+        console.log(email);
+        
         setLoading(false)
         navigation.goBack()
       })
@@ -84,14 +86,6 @@ export const UserUpdateProfileScreen: FC<
             value={phone}
             inputContainerStyle={{ borderBottomWidth: 0 }}
             leftIcon={<Ionicons name="call" size={24} color="gray" />}
-          />
-          <Input
-            containerStyle={styles.input}
-            placeholder="Email"
-            onChangeText={(e) => setEmail(e)}
-            value={email}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
-            leftIcon={<Ionicons name="mail" size={24} color="gray" />}
           />
           <Input
             containerStyle={styles.input}
