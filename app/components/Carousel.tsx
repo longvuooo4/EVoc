@@ -18,6 +18,7 @@ import Octicons from "react-native-vector-icons/Octicons"
 import FlipCard from "react-native-flip-card"
 import Tts from "react-native-tts"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import Entypo from 'react-native-vector-icons/Entypo'
 
 export interface CarouselProps {
   /**
@@ -117,15 +118,16 @@ export const Carousel = memo(
                 flexDirection: "row",
                 flex: 1.7,
                 justifyContent: "space-between",
+                marginHorizontal: 15,
                 alignItems: "center",
               }}
             >
               <View>
-                {index !== 0 && <Ionicons name="chevron-back-outline" style={{ fontSize: 35 }} />}
+                {index !== 0 && <Entypo name="arrow-bold-left" style={{ fontSize: 35 }} />}
               </View>
               <View>
                 {index !== data.length - 1 && (
-                  <Ionicons name="chevron-forward-outline" style={{ fontSize: 35 }} />
+                  <Entypo name="arrow-bold-right" style={{ fontSize: 35 }} />
                 )}
               </View>
             </View>

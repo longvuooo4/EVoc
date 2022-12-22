@@ -329,7 +329,7 @@ export const TestScreen: FC<StackScreenProps<AppStackScreenProps, "Test">> = obs
             flex: 1,
             paddingVertical: 40,
             paddingHorizontal: 16,
-            backgroundColor: "#252C4A",
+            backgroundColor: "#3F0071",
             position: "relative",
           }}
         >
