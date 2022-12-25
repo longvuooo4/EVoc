@@ -1,21 +1,17 @@
+import auth from "@react-native-firebase/auth"
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { Alert, TextInput, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native"
+import React, { FC, useRef, useState } from "react"
+import { Alert, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import {
   Button,
-  ButtonSocial,
-  Icon,
-  Screen,
+  ButtonSocial, Screen,
   Text,
-  TextField,
-  TextFieldAccessoryProps,
+  TextField
 } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-import auth from "@react-native-firebase/auth"
-import { useNavigation } from "@react-navigation/native"
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin"
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({ navigation }) {
@@ -55,7 +51,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          Alert.alert("Đăng nhập thành công", `Chào mừng bạn ${auth().currentUser.displayName}`)
+          Alert.alert("", `Chào mừng bạn ${auth().currentUser.displayName}`)
         })
         .catch((error) => {
           if (error.code === "auth/invalid-email") {

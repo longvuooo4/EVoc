@@ -247,7 +247,8 @@ const styles = StyleSheet.create({
   speaker: {
     fontSize: 42,
     alignSelf: "flex-end",
-    margin: 8,
+    marginHorizontal: 8,
+    marginTop: 8,
     color: "#ffff",
   },
   voc: {

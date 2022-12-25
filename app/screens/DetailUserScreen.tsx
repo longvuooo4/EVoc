@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ImageBackground, View, ViewStyle, Image, StyleSheet, Dimensions } from "react-native"
+import { ImageBackground, View, ViewStyle, Image, StyleSheet, Dimensions, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { CustomButton, Screen, Text } from "../components"
@@ -45,16 +45,24 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
       }
     }, [])
     const logout = () => {
-      auth().currentUser.providerData[0].providerId == "google.com"
-        ? GoogleSignin.signOut().then(() => {
-            auth().signOut()
-            // navigation.navigate("Login")
-          })
-        : auth()
-            .signOut()
-            .then(() => {
-              // navigation.navigate("Login")
-            })
+      Alert.alert("", "Do you want Sign out?", [
+        {
+          text: "Yes",
+          onPress: () => {
+            auth().currentUser.providerData[0].providerId == "google.com"
+              ? GoogleSignin.signOut().then(() => {
+                auth().signOut()
+                // navigation.navigate("Login")
+              })
+              : auth()
+                .signOut()
+                .then(() => {
+                  // navigation.navigate("Login")
+                })
+          },
+        },
+        { text: "No", onPress: () => { } },])
+
     }
     if (infoUser) {
       database()
@@ -68,7 +76,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
         })
     }
     return (
-      <Screen style={$root} preset="scroll">
+      <View style={$root}>
         <Header
           backgroundColor={"#4ea9fd"}
           centerComponent={<Text style={styles.titleHeader}>User Profile</Text>}
@@ -136,7 +144,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
             />
           </View>
         </View>
-      </Screen>
+      </View>
     )
   },
 )
