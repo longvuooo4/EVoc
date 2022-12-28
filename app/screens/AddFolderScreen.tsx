@@ -180,7 +180,7 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
       }
     }
     return (
-      <Screen style={$root}>
+      <Screen preset="auto" style={$root}>
         <Header
           backgroundColor={"#4ea9fd"}
           centerComponent={<Text style={$titleHeader}>Create a new folder</Text>}

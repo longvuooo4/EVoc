@@ -23,7 +23,7 @@ import { SearchBar } from "@rneui/themed"
 
 const Width = Dimensions.get("window").width
 const Height = Dimensions.get("window").height
-const avtdefaut = require("../../assets/images/avt.png")
+const avtdefaut = require("../../assets/images/avt.jpg")
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
 export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = observer(
@@ -117,7 +117,7 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
               style={$avatar}
               source={ {
                 uri:  avt,
-              } || avtdefaut}
+              }}
               resizeMode="center"
             ></Image>
           </TouchableOpacity>

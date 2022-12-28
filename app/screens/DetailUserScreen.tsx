@@ -24,8 +24,8 @@ const Height = Dimensions.get("window").height
 // - Import your screen, and add it to the stack:
 //     `<Stack.Screen name="DetailUser" component={DetailUserScreen} />`
 // Hint: Look for the 🔥!
-const background = require("../../assets/images/vocabulary-background.png")
-const avtdefaut = require("../../assets/images/avt.png")
+const background = require("../../assets/images/vocabulary-background.jpg")
+const avtdefaut = require("../../assets/images/avt.jpg")
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
@@ -104,7 +104,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
               style={styles.avt}
               source={{
                 uri: infoUser?.photoUrl,
-              } ||  avtdefaut }
+              }}
             ></Image>
           </View>
           <View style={styles.boxName}>
