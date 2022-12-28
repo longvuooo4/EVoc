@@ -24,6 +24,8 @@ const Height = Dimensions.get("window").height
 // - Import your screen, and add it to the stack:
 //     `<Stack.Screen name="DetailUser" component={DetailUserScreen} />`
 // Hint: Look for the 🔥!
+const background = require("../../assets/images/vocabulary-background.png")
+const avtdefaut = require("../../assets/images/avt.png")
 
 // REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
 // @ts-ignore
@@ -33,6 +35,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
     // const { someStore, anotherStore } = useStores()
     const [infoUser, setInfoUser] = useState<InfoUser>()
     const user = firebase.auth().currentUser
+
     useEffect(() => {
       GoogleSignin.configure({
         webClientId: "442457688299-ejuki2n2rvcbelepqkjlak1719m0q4f1.apps.googleusercontent.com",
@@ -72,7 +75,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
           name: user.displayName,
           email: user.email,
           checked: infoUser.checked,
-          photoUrl: infoUser.photoUrl || "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png",
+          photoUrl: infoUser.photoUrl || "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png" ,
         })
     }
     return (
@@ -93,9 +96,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
         <View style={styles.content}>
           <ImageBackground
             style={styles.bgImg}
-            source={{
-              uri: "https://img.freepik.com/free-photo/vocabulary-background-with-school-supplies_23-2149436695.jpg",
-            }}
+            source={background}
           ></ImageBackground>
 
           <View style={styles.boxAvt}>
@@ -103,7 +104,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
               style={styles.avt}
               source={{
                 uri: infoUser?.photoUrl,
-              }}
+              } ||  avtdefaut }
             ></Image>
           </View>
           <View style={styles.boxName}>

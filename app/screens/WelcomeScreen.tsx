@@ -39,8 +39,8 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       .on("value", (snapshot) => {
         Object.keys(snapshot.val()).map((key) => {
           if (key == auth().currentUser.uid) {
-            setVisible(true)
-          }else setVisible(false)
+            setVisible(false)
+          }else setVisible(true)
         })
       })
     return () => {

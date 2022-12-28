@@ -38,7 +38,7 @@ export const DetailFolderScreen: FC<StackScreenProps<AppStackScreenProps, "Detai
 
     return (
       <View style={$root}>
-        <View style={{ justifyContent: "center", alignItems: "center", marginTop: 50, marginBottom: 15 }}>
+        <View style={{ justifyContent: "center", alignItems: "center", marginTop: 50, marginBottom: 15, width: "99%" }}>
           <Text style={$header}>{id}</Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-around", marginBottom: 5 }}>
@@ -64,7 +64,7 @@ const $header: TextStyle = {
   paddingTop: 40,
   textAlignVertical: "center",
   fontWeight: "bold",
-  fontSize: spacing.huge,
+  fontSize: spacing.extraLarge,
   marginBottom: spacing.small,
   textTransform: "capitalize",
 }
