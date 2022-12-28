@@ -2,7 +2,7 @@ import auth from "@react-native-firebase/auth"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { observer } from "mobx-react-lite"
 import React, { FC, useRef, useState } from "react"
-import { Alert, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Image, ImageStyle, SafeAreaView, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import {
   Button,
   ButtonSocial, Screen,
@@ -12,23 +12,26 @@ import {
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+import Ionicons from "react-native-vector-icons/Ionicons"
+import { Input } from "@rneui/themed"
+import database from "@react-native-firebase/database"
+
+
+interface LoginScreenProps extends AppStackScreenProps<"Login"> { }
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({ navigation }) {
+  const [checked, setChecked] = useState(false)
+
   async function googleSignin() {
     try {
       await GoogleSignin.configure({
         webClientId: "442457688299-ejuki2n2rvcbelepqkjlak1719m0q4f1.apps.googleusercontent.com",
       })
       const { idToken } = await GoogleSignin.signIn()
-      // console.log(GoogleSignin.signIn())
-
       const googleCredential = await auth.GoogleAuthProvider.credential(idToken)
       return auth()
         .signInWithCredential(googleCredential)
         .then((userCredentials) => {
-          console.log(googleCredential)
-          navigation.navigate("Home")
         })
         .catch((err) => {
           console.log("Login Fail !!\n" + err)
@@ -51,7 +54,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          Alert.alert("", `Chào mừng bạn ${auth().currentUser.displayName}`)
+          // navigation.navigate("Home")
+          // Alert.alert("", `Chào mừng bạn ${auth().currentUser.displayName}`)
         })
         .catch((error) => {
           if (error.code === "auth/invalid-email") {
@@ -79,37 +83,39 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
     navigation.navigate("Signup")
   }
   return (
-    <Screen
-      preset="auto"
-      contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+    <SafeAreaView
+      style={$screenContentContainer}
     >
-      <Text testID="login-heading" text="Sign In" preset="heading" style={$signIn} />
-      <TextField
-        value={email}
-        onChangeText={setEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="email"
-        autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="loginScreen.emailFieldLabel"
-        placeholderTx="loginScreen.emailFieldPlaceholder"
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-      <TextField
-        ref={authPasswordInput}
-        value={password}
-        onChangeText={setPassword}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="password"
-        autoCorrect={false}
-        secureTextEntry={isAuthPasswordHidden}
-        labelTx="loginScreen.passwordFieldLabel"
-        placeholderTx="loginScreen.passwordFieldPlaceholder"
-        onSubmitEditing={onLoginPress}
-      />
+      <Image source={require('../../assets/images/EVoc.png')} style={$img} />
+      <View style={$viewText} >
+        <Input
+          placeholder="Email"
+          leftIcon={<Ionicons name="mail" size={24} color="gray" />}
+          value={email}
+          onChangeText={(e) => setEmail(e)}
+        />
+        <Input
+          secureTextEntry={isAuthPasswordHidden}
+          placeholder="Password"
+          leftIcon={<Ionicons name="lock-closed" size={24} color="gray" />}
+          value={password}
+          onChangeText={(p) => setPassword(p)}
+          rightIcon={
+            !password ? (
+              <View />
+            ) : (
+              <Ionicons
+                name={isAuthPasswordHidden ? "eye" : "eye-off"}
+                size={24}
+                color="gray"
+                onPress={() => {
+                  setIsAuthPasswordHidden(!isAuthPasswordHidden)
+                }}
+              />
+            )
+          }
+        />
+      </View>
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
@@ -119,22 +125,24 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
       />
       <Text style={{ textAlign: "center", marginTop: 15 }}>or connect with</Text>
       <View style={{ alignItems: "center" }}>
-        <ButtonSocial text="Facebook" nameIcon="social-facebook" />
+        {/* <ButtonSocial text="Facebook" nameIcon="social-facebook" /> */}
         <ButtonSocial text="Google" nameIcon="social-google" onPress={googleSignin} />
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
         <Text style={{ textAlign: "center", marginTop: 15 }}>Don't have an account? </Text>
         <TouchableOpacity style={{ alignSelf: "center", marginTop: 15 }} onPress={onSignupPress}>
-          <Text style={{ color: "#FFA717", textDecorationLine: "underline" }}>Create one</Text>
+          <Text style={{ color: "#FFA717", textDecorationLine: "underline", fontWeight: "bold" }}>Create one</Text>
         </TouchableOpacity>
       </View>
-    </Screen>
+    </SafeAreaView>
   )
 })
 
 const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.huge,
+  paddingVertical: '3%',
   paddingHorizontal: spacing.large,
+  backgroundColor: "#fff",
+  height: "100%"
 }
 
 const $signIn: TextStyle = {
@@ -142,7 +150,18 @@ const $signIn: TextStyle = {
   textAlign: "center",
   marginBottom: spacing.small,
 }
-
+const $img: ImageStyle = {
+  height: 250,
+  width: 250,
+  justifyContent: "center",
+  alignSelf: "center",
+  borderRadius: 50
+}
+const $eye: ViewStyle = {
+  position: 'absolute',
+  right: 15,
+  top: "40%"
+}
 const $enterDetails: TextStyle = {
   marginBottom: spacing.large,
 }
@@ -152,12 +171,14 @@ const $hint: TextStyle = {
   marginBottom: spacing.medium,
 }
 
-const $textField: ViewStyle = {
-  marginBottom: spacing.large,
+const $viewText: ViewStyle = {
+  marginTop: 30,
 }
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.extraSmall,
+  borderRadius: 50,
+  backgroundColor: "#FFA717"
 }
 
 // @demo remove-file

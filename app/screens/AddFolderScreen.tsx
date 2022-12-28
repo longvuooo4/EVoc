@@ -11,6 +11,7 @@ import {
   Alert,
   FlatList,
   ScrollView,
+  BackHandler
 } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
@@ -57,6 +58,39 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
       { label: "Adv", value: "Adv" },
       { label: "Pre", value: "Pre" },
     ]
+    useEffect(() => {
+      const backAction = () => {
+
+        Alert.alert("", "Do you want to go back without saving?", [
+          {
+            text: "Yes",
+            onPress: () => {
+              if (id === "") {
+                navigation.goBack()
+                return true
+              } else {
+                database()
+                  .ref("Folder/" + id)
+                  .remove()
+                navigation.goBack()
+                return true
+              }
+            },
+
+          },
+          { text: "No", onPress: () => null }
+        ])
+        return true
+        // }
+      }
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      )
+      return () => backHandler.remove();
+    }, [])
+
     const addVoc = () => {
       database()
         .ref("Folder/" + id)
@@ -100,7 +134,7 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
                 backgroundColor: !checked == true ? "#4ea9fd" : "gray",
                 width: Width * 0.3,
                 marginTop: 10,
-                alignSelf:"center"
+                alignSelf: "center"
               },
             ]}
             disabled={!checked == true ? false : true}
@@ -122,7 +156,6 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
           console.log("====================================")
           console.log(item)
           console.log("====================================")
-          // database().ref("Folder/" + id + "/" + item).remove()
         })
       } catch (error) {
         console.log(error)
@@ -142,7 +175,7 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
               navigation.goBack()
             },
           },
-          { text: "No", onPress: () => {} },
+          { text: "No", onPress: () => { } },
         ])
       }
     }
@@ -169,7 +202,7 @@ export const AddFolderScreen: FC<StackScreenProps<AppStackScreenProps, "AddFolde
             </Text>
           }
         />
-            {add}
+        {add}
         {checked ? (
           <ScrollView>
             <View style={{ borderBottomWidth: 1, marginHorizontal: 10, marginVertical: 5 }} />

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Alert, Dimensions, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Dimensions, TextStyle, TouchableOpacity, View, ViewStyle, Image, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
 import { Button, ButtonSocial, Header, Screen, Text, TextField } from "../components"
@@ -8,7 +8,8 @@ import { colors, spacing } from "../theme"
 import auth, { firebase } from "@react-native-firebase/auth"
 import database from "@react-native-firebase/database"
 import { RadioButton } from "react-native-paper"
-
+import Ionicons from "react-native-vector-icons/Ionicons"
+import { Input } from "@rneui/themed"
 const Width = Dimensions.get("window").width
 
 // STOP! READ ME FIRST!
@@ -25,7 +26,7 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
     const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-
+    const [isAuthPasswordRepeatHidden, setIsAuthPasswordRepeatHidden] = useState(true)
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
@@ -49,26 +50,26 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
 
     const onRegisterPressed = async () => {
       if (!email || !password || !passwordRepeat || !name) {
-        Alert.alert("Can't be empty")
+        Alert.alert("", "Can't be empty")
       } else if (password != passwordRepeat) {
-        Alert.alert("Incorrect re-password")
+        Alert.alert("", "Incorrect re-password")
         setPassword("")
         setPasswordRepeat("")
       } else if (password === passwordRepeat) {
         try {
           await auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(() => {})
+            .then(() => { })
             .then(() => {
               console.log("Register with:" + email)
             })
             .catch((e) => {
               if (e.code === "auth/email-already-in-use") {
-                Alert.alert("That email address is already in use!")
+                Alert.alert("", "That email address is already in use!")
               }
 
               if (e.code === "auth/invalid-email") {
-                Alert.alert("That email address is invalid!")
+                Alert.alert("", "That email address is invalid!")
               }
               console.log("There has been a problem with your fetch operation: " + e.message)
             })
@@ -86,12 +87,12 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
                   checked,
                 })
                 .then(() => {
-                  Alert.alert("Register successful", `Chúc mừng bạn ${name} đã đăng ký thành công`)
+                  Alert.alert("Register successful", `Congratulations ${name} has successfully registered`)
 
                   resetForm()
                 })
             })
-        } catch (e) {}
+        } catch (e) { }
       }
       // navigation.navigate('confirmemail')
     }
@@ -100,70 +101,67 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
       <Screen
         preset="auto"
         contentContainerStyle={$screenContentContainer}
-        safeAreaEdges={["top", "bottom"]}
+        safeAreaEdges={["bottom"]}
       >
-        <Text testID="login-heading" text="Sign Up" preset="heading" style={$signIn} />
-        {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
-        {/* {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
-
-        <TextField
-          value={email}
-          onChangeText={setEmail}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="email"
-          autoCorrect={false}
+        <Image source={require('../../assets/images/EVoc.png')} style={$img} />
+        <Input
+          placeholder="Email"
+          leftIcon={<Ionicons name="mail" size={24} color="gray" />}
           keyboardType="email-address"
-          labelTx="loginScreen.emailFieldLabel"
-          placeholderTx="loginScreen.emailFieldPlaceholder"
+          value={email}
+          onChangeText={(e) => setEmail(e)}
         />
-        <TextField
-          value={name}
-          onChangeText={setName}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="name"
-          autoCorrect={false}
+        <Input
+          placeholder="Name"
+          leftIcon={<Ionicons name="person-circle-outline" size={24} color="gray" />}
           keyboardType="default"
-          labelTx="loginScreen.nameFieldLabel"
-          placeholderTx="loginScreen.nameFieldPlaceholder"
-          // onSubmitEditing={() => authPasswordInput.current?.focus()}
+          value={name}
+          onChangeText={(e) => setName(e)}
         />
-        <TextField
-          // ref={authPasswordInput}
+        <Input
+          secureTextEntry={isAuthPasswordHidden}
+          placeholder="Password"
+          leftIcon={<Ionicons name="lock-closed" size={24} color="gray" />}
           value={password}
-          onChangeText={setPassword}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="password"
-          autoCorrect={false}
-          secureTextEntry={isAuthPasswordHidden}
-          labelTx="loginScreen.passwordFieldLabel"
-          placeholderTx="loginScreen.passwordFieldPlaceholder"
-          // helper={errors?.authPassword}
-          // status={errors?.authPassword ? "error" : undefined}
-          // onSubmitEditing={onLoginPress}
-          // RightAccessory={PasswordRightAccessory}
+          onChangeText={(p) => setPassword(p)}
+          rightIcon={
+            !password ? (
+              <View />
+            ) : (
+              <Ionicons
+                name={isAuthPasswordHidden ? "eye" : "eye-off"}
+                size={24}
+                color="gray"
+                onPress={() => {
+                  setIsAuthPasswordHidden(!isAuthPasswordHidden)
+                }}
+              />
+            )
+          }
         />
-        <TextField
-          // ref={authPasswordInput}
+        <Input
+          secureTextEntry={isAuthPasswordRepeatHidden}
+          placeholder="Confirm Password"
+          leftIcon={<Ionicons name="lock-closed" size={24} color="gray" />}
           value={passwordRepeat}
-          onChangeText={setPasswordRepeat}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="password"
-          autoCorrect={false}
-          secureTextEntry={isAuthPasswordHidden}
-          label="Confirm Password"
-          placeholder="Confirm password"
-          // helper={errors?.authPassword}
-          // status={errors?.authPassword ? "error" : undefined}
-          // onSubmitEditing={onLoginPress}
-          // RightAccessory={PasswordRightAccessory}
+          onChangeText={(p) => setPasswordRepeat(p)}
+          rightIcon={
+            !passwordRepeat ? (
+              <View />
+            ) : (
+              <Ionicons
+                name={isAuthPasswordRepeatHidden ? "eye" : "eye-off"}
+                size={24}
+                color="gray"
+                onPress={() => {
+                  setIsAuthPasswordRepeatHidden(!isAuthPasswordRepeatHidden)
+                }}
+              />
+            )
+          }
         />
-
-        <Text style={{fontWeight: "700", fontSize: 16}}>You are?</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={{ fontWeight: "700", fontSize: 16, marginHorizontal: 10 }}>You are?</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", marginHorizontal: 10 }}>
           <View style={$radioButton}>
             <Text>Teacher</Text>
             <RadioButton
@@ -196,10 +194,17 @@ export const SignupScreen: FC<StackScreenProps<AppStackScreenProps, "Signup">> =
 )
 
 const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.huge,
+  paddingBottom: spacing.huge,
   paddingHorizontal: spacing.large,
 }
-
+const $img: ImageStyle = {
+  height: 250,
+  width: 250,
+  justifyContent: "center",
+  alignSelf: "center",
+  borderRadius: 50,
+  marginBottom: 10
+}
 const $signIn: TextStyle = {
   justifyContent: "center",
   textAlign: "center",
@@ -226,4 +231,6 @@ const $textField: ViewStyle = {
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.extraSmall,
+  borderRadius: 50,
+  backgroundColor: "#FFA717"
 }

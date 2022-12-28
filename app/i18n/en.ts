@@ -39,7 +39,7 @@ const en = {
     passwordFieldLabel: "Password",
     emailFieldPlaceholder: "Enter your email address",
     nameFieldPlaceholder: "Enter your name",
-    passwordFieldPlaceholder: "Super secret password here",
+    passwordFieldPlaceholder: "Enter your password",
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },

@@ -4,7 +4,7 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
- import {
+import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
@@ -23,12 +23,14 @@ import {
   HistoryScreen,
   HomeScreen,
   LoginScreen,
+  PermissionGoogleScreen,
   SignupScreen, TestScreen, UserUpdateProfileScreen, // @demo remove-current-line
   WelcomeScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import auth from "@react-native-firebase/auth"
 import { AddFolderScreen } from "../screens/AddFolderScreen"
+import database from "@react-native-firebase/database"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -48,19 +50,21 @@ export type AppStackParamList = {
   Login: undefined // @demo remove-current-line
   Signup: undefined
   Home: undefined
-  Folder:{
+  Folder: {
     folder: FolderE
-  } 
+  }
   DetailFolder: undefined
   DetailUser: undefined
   UserUpdateProfile: {
     detailsUser: InfoUser
   }
-  AddFolder:{
+  AddFolder: {
     folder: FolderE
-  } 
+  }
   Test: undefined
   History: undefined
+  Permission: undefined
+
 }
 
 /**
@@ -84,10 +88,13 @@ const AppStack = observer(function AppStack() {
   // } = useStores()
   const [initializing, setInitializing] = useState(true)
   const [user, setUser] = useState()
+  const [checked, setChecked] = useState(false)
   function onAuthStateChanged(user) {
     setUser(user)
+   
     if (initializing) setInitializing(false)
   }
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
     return subscriber // unsubscribe on unmount
@@ -98,11 +105,12 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={user ? "Home" : "Login"} // @demo remove-current-line
-    >
+      initialRouteName={user ? "Welcome" : "Login"}
+    > 
       {/* @demo remove-block-start */}
       {user ? (
         <>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="DetailFolder" component={DetailFolderScreen} />
           <Stack.Screen name="DetailUser" component={DetailUserScreen} />
@@ -110,8 +118,6 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="AddFolder" component={AddFolderScreen} />
           <Stack.Screen name="Test" component={TestScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
-
-          
         </>
       ) : (
         <>
@@ -125,17 +131,15 @@ const AppStack = observer(function AppStack() {
   )
 })
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> { }
 
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const colorScheme = useColorScheme()
 
-  useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
+  // useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
 
   return (
     <NavigationContainer
-      ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
       <AppStack />

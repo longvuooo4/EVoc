@@ -32,6 +32,7 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
     const [search, setSearch] = useState("")
     const [listFolder, setListFolder] = useState([])
     const [checked, setChecked] = useState(false)
+    const [avt, setAvt] = useState("")
     const [filterData, setFilterData] = useState([])
 
     useEffect(() => {
@@ -52,9 +53,11 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
         .ref("users/" + auth().currentUser.uid)
         .on("value", (snapshot) => {
           setChecked(snapshot.val().checked)
+          setAvt(snapshot.val().photoUrl)
         })
       return () => {
         setChecked(false)
+        setAvt("")
       }
     }, [])
     let add
@@ -112,7 +115,7 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
             <Image
               style={$avatar}
               source={{
-                uri: "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png",
+                uri: avt || "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png",
               }}
               resizeMode="center"
             ></Image>

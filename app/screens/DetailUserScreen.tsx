@@ -72,7 +72,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
           name: user.displayName,
           email: user.email,
           checked: infoUser.checked,
-          photoUrl: "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png",
+          photoUrl: infoUser.photoUrl || "http://dayve.vn/wp-content/uploads/2021/11/cach-ve-con-cu-buoc-9.png",
         })
     }
     return (
@@ -116,7 +116,7 @@ export const DetailUserScreen: FC<StackScreenProps<AppStackScreenProps, "DetailU
               {"Phone Number: "} {infoUser?.phoneNumber}
             </Text>
             <Text style={styles.textInfor}>
-              {"Age: "} {infoUser?.birthday == "undefided" ? "" : infoUser?.birthday}{" "}
+              {"Birthday: "} {infoUser?.birthday == "undefided" ? "" : infoUser?.birthday}{" "}
             </Text>
             <Text style={styles.textInfor}>
               {"Gender: "}
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingBottom: 30,
     paddingTop: 20,
-    flex: 1,
+    flex: 0.8,
     backgroundColor: "#4ea9fd",
     marginLeft: 35,
     marginRight: 35,
@@ -268,7 +268,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.55,
     shadowRadius: 3.84,
-
     elevation: 8,
   },
   titleInfor: {

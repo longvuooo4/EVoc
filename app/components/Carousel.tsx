@@ -162,7 +162,7 @@ export const Carousel = memo(
             height: 100,
             alignItems: "center",
             margin: 15,
-            paddingHorizontal: 20,
+            paddingHorizontal: 5,
             backgroundColor: color,
           }}
         >
@@ -171,12 +171,12 @@ export const Carousel = memo(
               Tts.speak(item.en)
             }}
           >
-            <Octicons style={{position: "absolute", top: -40, left: 0, fontSize: 24}} name="unmute" />
+            <Octicons style={{position: "absolute", top: -40, left: 10, fontSize: 24}} name="unmute" />
           </TouchableOpacity>
           <Text numberOfLines={2} maxFontSizeMultiplier={2}>
             {item.en} ({item.type}) :{" "}
           </Text>
-          <Text numberOfLines={3} maxFontSizeMultiplier={3} style={{ width: "50%" }}>
+          <Text numberOfLines={3} maxFontSizeMultiplier={3} style={{ width: "45%" }}>
             {item.vn}
           </Text>
         </View>
