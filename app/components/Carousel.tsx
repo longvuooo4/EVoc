@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   voc: {
     fontSize: 42,
-    color: "#000000",
+    color: "#ffff",
     width: Width * 0.8,
     textAlign: "center",
   },

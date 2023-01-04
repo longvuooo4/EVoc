@@ -106,7 +106,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
         </View>
       </SafeAreaView>
       <View style={{
-        backgroundColor: "#1f3",
+        flex:0,
         alignItems: "center",
         justifyContent: "center",
       }}>
@@ -141,8 +141,7 @@ const $bottomContainer: ViewStyle = {
   flexGrow: 0,
   flexBasis: "43%",
   backgroundColor: colors.palette.neutral100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
+  borderRadius: 16
 }
 
 const $bottomContentContainer: ViewStyle = {

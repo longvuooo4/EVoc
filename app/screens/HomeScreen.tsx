@@ -113,13 +113,19 @@ export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = obs
           {add}
           <Text testID="login-heading" text="E-VOC" preset="heading" style={$signIn} />
           <TouchableOpacity onPress={() => navigation.navigate("DetailUser")}>
-            <Image
-              style={$avatar}
-              source={ {
-                uri:  avt,
-              }}
-              resizeMode="center"
-            ></Image>
+            <View style={{
+              borderRadius: 25,
+              borderWidth: 0.5,
+              borderColor: "#FFA717",
+            }}>
+              <Image
+                style={$avatar}
+                source={{
+                  uri: avt,
+                }}
+                resizeMode="center"
+              ></Image>
+            </View>
           </TouchableOpacity>
         </View>
         <SearchBar
