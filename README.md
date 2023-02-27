@@ -1,3 +1,13 @@
+# XÂY DỰNG ỨNG DỤNG HỌC TỪ VỰNG "EVOC" VỚI REACT NATIVE VÀ FIREBASE
+
+[![Watch the video](https://img.youtube.com/vi/NPMtmUVonu4/hqdefault.jpg)](https://youtu.be/NPMtmUVonu4)
+
+<img src="https://user-images.githubusercontent.com/93035668/221620867-0573cf12-cf8a-4e3f-9d17-111939fa0f39.jpg" width="300"> <img src="https://user-images.githubusercontent.com/93035668/221621322-875ec31f-5191-48d7-a9e2-0797d495ff14.jpg" width="300"> 
+<img src="https://user-images.githubusercontent.com/93035668/221621339-ad279ce0-0946-4547-8283-5360934b3737.jpg" width="300"> <img src="https://user-images.githubusercontent.com/93035668/221621351-4de88eb5-5f29-4aa7-a951-e5a066d86cd7.jpg" width="300"> 
+<img src="https://user-images.githubusercontent.com/93035668/221621356-122ab285-a3e8-4aa9-a385-490b4060188c.jpg" width="300"> <img src="https://user-images.githubusercontent.com/93035668/221621369-d6464ba9-5b4c-484e-addb-cfb781d09679.jpg" width="300"> 
+<img src="https://user-images.githubusercontent.com/93035668/221621386-74c99cf9-3478-45d2-b1fe-052951620957.jpg" width="300"> <img src="https://user-images.githubusercontent.com/93035668/221621394-b184b8ff-ae25-4c90-acf0-8a9502016294.jpg" width="300"> <img src="https://user-images.githubusercontent.com/93035668/221621523-c7a2b9bb-2d1d-485d-b5b0-951caeaa9423.jpg" width="300"> 
+
+
 # Welcome to your new ignited app!
 
 [![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
